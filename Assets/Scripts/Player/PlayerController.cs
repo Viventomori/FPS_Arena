@@ -5,20 +5,27 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody playerRigidbody;
+    private PlayerInput playerInput;
+   private CharacterController controller;
+  
+    private float playerSpeed = 2.0f;
+  
 
-    private void Awake()
+
+    private void Start()
     {
-        playerRigidbody = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
+        playerInput = GetComponent<PlayerInput>();
+     
+        
     }
 
-    public void Jump(InputAction.CallbackContext context)
+    void Update()
     {
-        if (context.performed)
-        {
-            Debug.Log("MoveShit" + context.phase);
-            playerRigidbody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
-        }
+        Vector2 input = playerInput.actions["Movement"].ReadValue<Vector2>();
+        Vector3 move = transform.right * input.x + transform.forward * input.y;
+        controller.Move(move * playerSpeed * Time.deltaTime);        
     }
 }
+
 
